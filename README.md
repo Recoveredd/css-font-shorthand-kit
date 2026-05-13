@@ -1,6 +1,16 @@
 # css-font-shorthand-kit
 
+[![License: MPL-2.0](https://img.shields.io/badge/license-MPL--2.0-blue.svg)](LICENSE)
+[![CI](https://github.com/Recoveredd/css-font-shorthand-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/Recoveredd/css-font-shorthand-kit/actions/workflows/ci.yml)
+
 Small TypeScript library for parsing CSS `font` shorthand values into a predictable object, with structured diagnostics when a value is incomplete or ambiguous.
+
+## Package quality
+
+- TypeScript types are generated from the source.
+- ESM-only package marked as side-effect free for bundlers.
+- CI runs `npm ci`, `typecheck`, `build`, and `test`.
+- Tested on Node.js 20 and 22 with GitHub Actions.
 
 ## Demo
 
