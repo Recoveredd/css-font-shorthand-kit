@@ -67,6 +67,24 @@ describe("parseFontShorthand", () => {
 
     expect(result.ok).toBe(false);
   });
+
+  it("keeps font-size functions with spaces as a single token", () => {
+    const result = parseFontShorthand('700 calc(1rem + 2px)/1.5 "Inter"');
+
+    expect(result.ok).toBe(true);
+    if (!result.ok || "system" in result.value) return;
+    expect(result.value.size).toBe("calc(1rem + 2px)");
+    expect(result.value.lineHeight).toBe("1.5");
+    expect(result.value.family).toEqual(["Inter"]);
+  });
+
+  it("reports unterminated function tokens", () => {
+    const result = parseFontShorthand("700 calc(1rem + 2px Arial");
+
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.errors[0]?.code).toBe("unterminated-function");
+  });
 });
 
 describe("parseFontFamilyList", () => {
@@ -81,6 +99,11 @@ describe("parseFontFamilyList", () => {
     const result = parseFontFamilyList("Inter,,sans-serif");
 
     expect(result.errors[0]?.code).toBe("invalid-family");
+  });
+
+  it("rejects trailing commas and dangling escapes", () => {
+    expect(parseFontFamilyList("Inter,").errors[0]?.code).toBe("invalid-family");
+    expect(parseFontFamilyList("Inter\\").errors[0]?.code).toBe("dangling-escape");
   });
 });
 

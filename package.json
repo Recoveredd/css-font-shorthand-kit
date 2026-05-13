@@ -6,6 +6,14 @@
   "sideEffects": false,
   "license": "MPL-2.0",
   "author": "Recoveredd",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Recoveredd/css-font-shorthand-kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Recoveredd/css-font-shorthand-kit/issues"
+  },
+  "homepage": "https://github.com/Recoveredd/css-font-shorthand-kit#readme",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

@@ -17,11 +17,23 @@ font.value;
 // }
 ```
 
+## Install
+
+```bash
+npm install css-font-shorthand-kit
+```
+
 ## API
 
 ### `parseFontShorthand(input, options?)`
 
-Returns `{ ok: true, value, warnings }` or `{ ok: false, errors, warnings }`.
+Returns a discriminated result instead of throwing:
+
+```ts
+type ParseFontResult =
+  | { ok: true; value: ParsedFontShorthand; warnings: FontDiagnostic[] }
+  | { ok: false; errors: FontDiagnostic[]; warnings: FontDiagnostic[] };
+```
 
 ### `tryParseFontShorthand(input, options?)`
 
@@ -43,8 +55,17 @@ Serializes a parsed value back to a compact CSS `font` shorthand string.
 - comma-separated font families, including quoted names and escaped quotes
 - diagnostics for missing size/family, duplicate tokens, unknown pre-size tokens, and unterminated quotes
 
-This draft intentionally does not attempt to be a full CSS parser. It is meant for tools that need a small, browser-friendly parser for one property.
+This package intentionally does not attempt to be a full CSS parser. It is meant for tools that need a small, browser-friendly parser for one property.
 
-## Browser use
+## Browser compatibility
 
 The core uses only strings, arrays, and regular expressions. It has no runtime dependency and no Node-only API requirement.
+
+## CLI
+
+No CLI is included. The natural use is as an embeddable helper inside CSS,
+canvas, design-token, editor, and browser tooling.
+
+## License
+
+MPL-2.0

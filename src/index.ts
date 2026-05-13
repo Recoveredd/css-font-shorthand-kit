@@ -2,8 +2,8 @@ export type FontStyle = "normal" | "italic" | "oblique";
 export type FontVariant = "normal" | "small-caps";
 
 export interface FontShorthand {
-  style?: string;
-  variant?: string;
+  style?: FontStyle;
+  variant?: FontVariant;
   weight?: string;
   stretch?: string;
   size: string;
@@ -22,6 +22,8 @@ export type FontDiagnosticCode =
   | "missing-font-size"
   | "missing-font-family"
   | "unterminated-quote"
+  | "unterminated-function"
+  | "dangling-escape"
   | "unexpected-token"
   | "duplicate-token"
   | "invalid-family";
@@ -136,6 +138,7 @@ export function parseFontFamilyList(input: string): {
   let current = "";
   let quote: "\"" | "'" | undefined;
   let escaped = false;
+  let lastSeparatorIndex: number | undefined;
 
   for (let index = 0; index < input.length; index += 1) {
     const char = input[index];
@@ -176,6 +179,7 @@ export function parseFontFamilyList(input: string): {
       }
       families.push(family);
       current = "";
+      lastSeparatorIndex = index;
       continue;
     }
 
@@ -189,9 +193,21 @@ export function parseFontFamilyList(input: string): {
     };
   }
 
+  if (escaped) {
+    return {
+      value: [],
+      errors: [{ code: "dangling-escape", message: "Font family escape is not followed by a character." }]
+    };
+  }
+
   const last = current.trim();
   if (last.length > 0) {
     families.push(last);
+  } else if (lastSeparatorIndex !== undefined) {
+    return {
+      value: [],
+      errors: [{ code: "invalid-family", message: "Font family entries cannot be empty.", index: lastSeparatorIndex }]
+    };
   }
 
   return { value: families, errors: [] };
@@ -262,6 +278,7 @@ function tokenizeBeforeFamily(input: string): {
   const tokens: Token[] = [];
   let tokenStart: number | undefined;
   let quote: "\"" | "'" | undefined;
+  let parenDepth = 0;
 
   for (let index = 0; index < input.length; index += 1) {
     const char = input[index];
@@ -278,11 +295,22 @@ function tokenizeBeforeFamily(input: string): {
       break;
     }
 
-    if (char === ",") {
+    if (char === "," && parenDepth === 0) {
       break;
     }
 
-    if (/\s/.test(char)) {
+    if (char === "(") {
+      tokenStart ??= index;
+      parenDepth += 1;
+      continue;
+    }
+
+    if (char === ")") {
+      parenDepth = Math.max(0, parenDepth - 1);
+      continue;
+    }
+
+    if (/\s/.test(char) && parenDepth === 0) {
       if (tokenStart !== undefined) {
         tokens.push({ value: input.slice(tokenStart, index), start: tokenStart, end: index });
         tokenStart = undefined;
@@ -297,6 +325,13 @@ function tokenizeBeforeFamily(input: string): {
     return {
       tokens,
       error: { code: "unterminated-quote", message: "Quote is not closed before font family." }
+    };
+  }
+
+  if (parenDepth > 0) {
+    return {
+      tokens,
+      error: { code: "unterminated-function", message: "Function token is missing a closing parenthesis." }
     };
   }
 
