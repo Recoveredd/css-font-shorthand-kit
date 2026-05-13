@@ -2,6 +2,10 @@
 
 Small TypeScript library for parsing CSS `font` shorthand values into a predictable object, with structured diagnostics when a value is incomplete or ambiguous.
 
+## Demo
+
+[Try the interactive demo](https://packages.wasta-wocket.fr/css-font-shorthand-kit/)
+
 ```ts
 import { parseFontShorthand } from "css-font-shorthand-kit";
 
