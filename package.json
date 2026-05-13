@@ -2,6 +2,16 @@
   "name": "css-font-shorthand-kit",
   "version": "0.1.0",
   "description": "Parse and format CSS font shorthand values with structured diagnostics.",
+  "keywords": [
+    "css",
+    "font",
+    "font-shorthand",
+    "parser",
+    "formatter",
+    "typescript",
+    "browser",
+    "developer-tools"
+  ],
   "type": "module",
   "sideEffects": false,
   "license": "MPL-2.0",
