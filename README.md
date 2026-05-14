@@ -1,5 +1,6 @@
 # css-font-shorthand-kit
 
+[![npm version](https://img.shields.io/npm/v/css-font-shorthand-kit.svg)](https://www.npmjs.com/package/css-font-shorthand-kit)
 [![License: MPL-2.0](https://img.shields.io/badge/license-MPL--2.0-blue.svg)](LICENSE)
 [![CI](https://github.com/Recoveredd/css-font-shorthand-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/Recoveredd/css-font-shorthand-kit/actions/workflows/ci.yml)
 
